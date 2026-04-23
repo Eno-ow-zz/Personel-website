@@ -96,10 +96,10 @@ export default function RootLayout({ children }) {
         <meta name="description" content={metadata.description} />
       </head>
       <body className="h-screen overflow-hidden">
-        <div className="flex h-screen">
+        <div className="relative h-screen" style={{ backgroundColor: 'var(--background)' }}>
 
           {/* Mobile Header */}
-          {isMobile && pathname !== '/' && (
+          {isMobile && !isSidebarVisible && (
             <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3"
               style={{ backgroundColor: 'var(--background)' }}>
               <button onClick={toggleMobileMenu} className="p-2">
@@ -124,10 +124,10 @@ export default function RootLayout({ children }) {
                       onClick={(e) => handleLinkClick(e, '/misc')}>Life Outside of Coding</MobileNavLink>
                   </nav>
                   <div className="flex gap-4 mt-4 pt-4 border-t border-current/10">
-                    <a href="mailto:your@email.com" className="p-2"><MdOutlineMail size={22} /></a>
-                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="p-2">
+                    <a href="mailto:enoch140303@gmail.com" className="p-2"><MdOutlineMail size={22} /></a>
+                    <a href="https://www.linkedin.com/in/eno-liu-18779432a/" target="_blank" rel="noopener noreferrer" className="p-2">
                       <AiOutlineLinkedin size={22} /></a>
-                    <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="p-2">
+                    <a href="https://github.com/Eno-ow-zz" target="_blank" rel="noopener noreferrer" className="p-2">
                       <FiGithub size={20} /></a>
                   </div>
                 </div>
@@ -151,8 +151,17 @@ export default function RootLayout({ children }) {
             </button>
           )}
 
-          {/* Sidebar */}
-          {(!isMobile || pathname === '/') && (
+          {/* Centered / Sidebar container */}
+          <div
+            className="absolute top-0 bottom-0 sidebar-transition flex"
+            style={{
+              left: isSidebarVisible ? '50%' : '0',
+              transform: isSidebarVisible ? 'translateX(-50%)' : 'translateX(0)',
+              width: isSidebarVisible
+                ? (isMobile ? '100%' : 'auto')
+                : (isMobile ? '100%' : '350px'),
+            }}
+          >
             <Sidebar
               isVisible={isSidebarVisible}
               pathname={pathname}
@@ -161,14 +170,18 @@ export default function RootLayout({ children }) {
               onToggleTheme={toggleTheme}
               theme={theme}
             />
-          )}
+          </div>
 
           {/* Main Content */}
           <main
-            className={`flex-1 overflow-y-auto no-scrollbar transition-all duration-500 ${
-              isMobile && pathname !== '/' ? 'pt-14' : ''
-            }`}
-            style={{ backgroundColor: 'var(--background)' }}
+            className="absolute top-0 bottom-0 right-0 overflow-y-auto no-scrollbar transition-all duration-[1s] ease-in-out"
+            style={{
+              left: isSidebarVisible
+                ? '100%'
+                : (isMobile ? '0' : '350px'),
+              paddingTop: isMobile && !isSidebarVisible ? '3.5rem' : '0',
+              backgroundColor: 'var(--background)',
+            }}
           >
             {children}
           </main>
@@ -216,12 +229,10 @@ function Sidebar({
 
   return (
     <aside
-      className={`sidebar-transition flex flex-col h-screen overflow-y-auto no-scrollbar ${
-        isMobile ? 'w-full' : ''
-      }`}
+      className="sidebar-transition flex flex-col h-screen overflow-y-auto no-scrollbar"
       style={{
-        width: isMobile ? '100%' : isVisible ? '420px' : '280px',
-        minWidth: isMobile ? '100%' : isVisible ? '420px' : '280px',
+        width: isMobile ? '100vw' : '350px',
+        minWidth: isMobile ? '100vw' : '350px',
         backgroundColor: 'var(--background)',
         padding: isMobile ? '2rem 1.5rem' : '2rem',
       }}
