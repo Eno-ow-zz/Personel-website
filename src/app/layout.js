@@ -121,7 +121,7 @@ export default function RootLayout({ children }) {
                     <MobileNavLink href="/work" pathname={pathname}
                       onClick={(e) => handleLinkClick(e, '/work')}>Projects</MobileNavLink>
                     <MobileNavLink href="/misc" pathname={pathname}
-                      onClick={(e) => handleLinkClick(e, '/misc')}>Life Outside of Coding</MobileNavLink>
+                      onClick={(e) => handleLinkClick(e, '/misc')}>More About Eno</MobileNavLink>
                   </nav>
                   <div className="flex gap-4 mt-4 pt-4 border-t border-current/10">
                     <a href="mailto:enoch140303@gmail.com" className="p-2"><MdOutlineMail size={22} /></a>
@@ -275,7 +275,7 @@ function Sidebar({
           </NavLink>
           <NavLink href="/misc" pathname={pathname}
             onClick={(e) => onLinkClick(e, '/misc')} theme={theme}>
-            Life Outside of Coding
+            More About Eno
           </NavLink>
         </nav>
 
