@@ -9,7 +9,6 @@ import { MdOutlineMail } from 'react-icons/md';
 import { BsMoon, BsSun } from 'react-icons/bs';
 import { useState, useEffect, useRef } from 'react';
 import { Analytics } from '@vercel/analytics/react';
-import ScratchAvatar from '@/components/ScratchAvatar';
 
 export default function RootLayout({ children }) {
   const pathname = usePathname();
@@ -161,7 +160,7 @@ export default function RootLayout({ children }) {
 
           {/* Centered / Sidebar container */}
           <div
-            className="absolute top-0 bottom-0 sidebar-transition flex"
+            className="absolute top-0 bottom-0 flex transition-all duration-700 ease-in-out"
             style={{
               left: isSidebarVisible ? '50%' : '0',
               transform: isSidebarVisible ? 'translateX(-50%)' : 'translateX(0)',
@@ -175,12 +174,13 @@ export default function RootLayout({ children }) {
               pathname={pathname}
               onLinkClick={handleLinkClick}
               isMobile={isMobile}
+              theme={theme}
             />
           </div>
 
           {/* Main Content */}
           <main
-            className="absolute top-0 bottom-0 right-0 overflow-y-auto no-scrollbar transition-all duration-[1s] ease-in-out"
+            className="absolute top-0 bottom-0 right-0 overflow-y-auto no-scrollbar transition-all duration-700 ease-in-out"
             style={{
               left: isSidebarVisible
                 ? '100%'
@@ -198,10 +198,10 @@ export default function RootLayout({ children }) {
   );
 }
 
-function Sidebar({ isVisible, pathname, onLinkClick, isMobile }) {
+function Sidebar({ isVisible, pathname, onLinkClick, isMobile, theme }) {
   return (
     <aside
-      className="sidebar-transition flex flex-col h-screen overflow-y-auto no-scrollbar"
+      className="flex flex-col h-screen overflow-y-auto no-scrollbar"
       style={{
         width: isMobile ? '100vw' : '350px',
         minWidth: isMobile ? '100vw' : '350px',
@@ -209,11 +209,11 @@ function Sidebar({ isVisible, pathname, onLinkClick, isMobile }) {
         padding: isMobile ? '2rem 1.5rem' : '2rem',
       }}
     >
-      <div className="flex-1 flex flex-col items-center justify-center gap-6">
-        {/* Name */}
+      {/* Upper section - name, links, nav */}
+      <div className="flex flex-col items-center gap-6 pt-16">
         <div className="text-center">
           <h1
-            className="font-title text-4xl md:text-5xl cursor-pointer transition-transform hover:scale-105"
+            className="font-title text-5xl md:text-6xl cursor-pointer transition-transform hover:scale-105"
             onClick={(e) => {
               if (pathname !== '/') onLinkClick(e, pathname);
             }}
@@ -222,10 +222,8 @@ function Sidebar({ isVisible, pathname, onLinkClick, isMobile }) {
           </h1>
         </div>
 
-        {/* Social Links */}
         <SocialLinks isMobile={isMobile} />
 
-        {/* Navigation */}
         <nav className="flex flex-col items-center gap-3">
           <NavLink href="/about" pathname={pathname}
             onClick={(e) => onLinkClick(e, '/about')}>
@@ -240,12 +238,15 @@ function Sidebar({ isVisible, pathname, onLinkClick, isMobile }) {
             More About Eno
           </NavLink>
         </nav>
+      </div>
 
-        {/* Avatar */}
-        <ScratchAvatar
-          topImage="/images/photos/ai-avatar.png"
-          bottomImage="/images/photos/real-photo.png"
-          size={280}
+      {/* Avatar - pinned to very bottom */}
+      <div className="flex justify-center mt-auto">
+        <img
+          src="/images/photos/ai-avatar.png"
+          alt="Eno Liu"
+          className="w-80 h-auto"
+          draggable={false}
         />
       </div>
 
@@ -257,19 +258,16 @@ function SocialLinks({ isMobile }) {
   return (
     <div className="flex items-center gap-6 mt-4">
       <a href="mailto:enoch140303@gmail.com"
-        className="flex items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
+        className="opacity-70 hover:opacity-100 transition-opacity">
         <MdOutlineMail size={22} />
-        {!isMobile && <span className="text-sm">Email</span>}
       </a>
       <a href="https://www.linkedin.com/in/eno-liu-18779432a/" target="_blank" rel="noopener noreferrer"
-        className="flex items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
+        className="opacity-70 hover:opacity-100 transition-opacity">
         <AiOutlineLinkedin size={22} />
-        {!isMobile && <span className="text-sm">LinkedIn</span>}
       </a>
       <a href="https://github.com/Eno-ow-zz" target="_blank" rel="noopener noreferrer"
-        className="flex items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
+        className="opacity-70 hover:opacity-100 transition-opacity">
         <FiGithub size={20} />
-        {!isMobile && <span className="text-sm">GitHub</span>}
       </a>
     </div>
   );
@@ -282,8 +280,8 @@ function NavLink({ href, pathname, onClick, children }) {
     <Link
       href={href}
       onClick={onClick}
-      className={`block text-lg transition-all duration-300 hover:text-xl ${
-        isActive ? 'font-bold' : ''
+      className={`block text-lg transition-opacity duration-300 hover:opacity-100 ${
+        isActive ? 'font-bold opacity-100' : 'opacity-50'
       }`}
     >
       {children}
