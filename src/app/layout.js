@@ -135,6 +135,14 @@ export default function RootLayout({ children }) {
             </div>
           )}
 
+          {/* Theme Toggle - fixed top left */}
+          <button
+            onClick={toggleTheme}
+            className="fixed top-4 left-4 z-50 flex items-center gap-2 text-sm opacity-70 hover:opacity-100 transition-opacity"
+          >
+            {theme === 'light' ? <BsMoon size={16} /> : <BsSun size={16} />}
+          </button>
+
           {/* Scroll-to-top button */}
           {!isSidebarVisible && (
             <button
@@ -167,8 +175,6 @@ export default function RootLayout({ children }) {
               pathname={pathname}
               onLinkClick={handleLinkClick}
               isMobile={isMobile}
-              onToggleTheme={toggleTheme}
-              theme={theme}
             />
           </div>
 
@@ -192,10 +198,7 @@ export default function RootLayout({ children }) {
   );
 }
 
-function Sidebar({
-  isVisible, pathname, onLinkClick, isMobile,
-  onToggleTheme, theme,
-}) {
+function Sidebar({ isVisible, pathname, onLinkClick, isMobile }) {
   return (
     <aside
       className="sidebar-transition flex flex-col h-screen overflow-y-auto no-scrollbar"
@@ -206,16 +209,6 @@ function Sidebar({
         padding: isMobile ? '2rem 1.5rem' : '2rem',
       }}
     >
-      {/* Theme Toggle */}
-      <div className="flex items-center justify-between mb-6">
-        <button onClick={onToggleTheme} className="flex items-center gap-2 text-sm opacity-70 hover:opacity-100 transition-opacity">
-          {theme === 'light' ? <BsMoon size={16} /> : <BsSun size={16} />}
-          {!isMobile && (
-            <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
-          )}
-        </button>
-      </div>
-
       <div className="flex-1 flex flex-col items-center justify-center gap-6">
         {/* Name */}
         <div className="text-center">
@@ -228,6 +221,9 @@ function Sidebar({
             Eno Liu
           </h1>
         </div>
+
+        {/* Social Links */}
+        <SocialLinks isMobile={isMobile} />
 
         {/* Navigation */}
         <nav className="flex flex-col items-center gap-3">
@@ -251,9 +247,6 @@ function Sidebar({
           bottomImage="/images/photos/real-photo.png"
           size={280}
         />
-
-        {/* Social Links */}
-        <SocialLinks isMobile={isMobile} />
       </div>
 
     </aside>
