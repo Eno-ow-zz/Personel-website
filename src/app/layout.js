@@ -196,37 +196,6 @@ function Sidebar({
   isVisible, pathname, onLinkClick, isMobile,
   onToggleTheme, theme,
 }) {
-  const [ellipseVisible, setEllipseVisible] = useState(true);
-  const [sparklesVisible, setSparklesVisible] = useState([true, true, true]);
-
-  useEffect(() => {
-    let mainInterval;
-    let blinkTimeout;
-
-    const animateEllipse = () => {
-      setEllipseVisible(false);
-      blinkTimeout = setTimeout(() => {
-        setSparklesVisible([false, false, false]);
-        setTimeout(() => {
-          setSparklesVisible([true, true, true]);
-          setTimeout(() => setEllipseVisible(true), 500);
-        }, 500);
-      }, 1200);
-    };
-
-    const initialDelay = 1000 + Math.random() * 2000;
-    const initialTimeout = setTimeout(() => {
-      animateEllipse();
-      mainInterval = setInterval(animateEllipse, 10000);
-    }, initialDelay);
-
-    return () => {
-      clearTimeout(initialTimeout);
-      clearInterval(mainInterval);
-      clearTimeout(blinkTimeout);
-    };
-  }, []);
-
   return (
     <aside
       className="sidebar-transition flex flex-col h-screen overflow-y-auto no-scrollbar"
@@ -247,10 +216,7 @@ function Sidebar({
         </button>
       </div>
 
-      {/* Avatar + Dialogue */}
       <div className="flex-1 flex flex-col items-center justify-center gap-6">
-        <DialogueBox />
-
         {/* Name */}
         <div className="text-center">
           <h1
@@ -264,20 +230,27 @@ function Sidebar({
         </div>
 
         {/* Navigation */}
-        <nav className="flex flex-col items-center gap-2 mt-4">
+        <nav className="flex flex-col items-center gap-3">
           <NavLink href="/about" pathname={pathname}
-            onClick={(e) => onLinkClick(e, '/about')} theme={theme}>
+            onClick={(e) => onLinkClick(e, '/about')}>
             About
           </NavLink>
           <NavLink href="/work" pathname={pathname}
-            onClick={(e) => onLinkClick(e, '/work')} theme={theme}>
+            onClick={(e) => onLinkClick(e, '/work')}>
             Projects
           </NavLink>
           <NavLink href="/misc" pathname={pathname}
-            onClick={(e) => onLinkClick(e, '/misc')} theme={theme}>
+            onClick={(e) => onLinkClick(e, '/misc')}>
             More About Eno
           </NavLink>
         </nav>
+
+        {/* Avatar */}
+        <ScratchAvatar
+          topImage="/images/photos/ai-avatar.png"
+          bottomImage="/images/photos/real-photo.png"
+          size={280}
+        />
 
         {/* Social Links */}
         <SocialLinks isMobile={isMobile} />
@@ -309,68 +282,19 @@ function SocialLinks({ isMobile }) {
   );
 }
 
-function NavLink({ href, pathname, onClick, children, theme }) {
-  const rotations = { '/about': 9, '/work': -8, '/misc': 5 };
-  const rotation = rotations[href] || 0;
-
-  const [isHovered, setIsHovered] = useState(false);
-  const [wasActive, setWasActive] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-
+function NavLink({ href, pathname, onClick, children }) {
   const isActive = pathname === href;
 
-  useEffect(() => {
-    const checkIfMobile = () => setIsMobile(window.innerWidth <= 1024);
-    checkIfMobile();
-    window.addEventListener('resize', checkIfMobile);
-    return () => window.removeEventListener('resize', checkIfMobile);
-  }, []);
-
-  useEffect(() => {
-    let timeout;
-    if (isActive) {
-      setWasActive(true);
-    } else if (wasActive) {
-      timeout = setTimeout(() => setWasActive(false), 500);
-    }
-    return () => clearTimeout(timeout);
-  }, [isActive, wasActive]);
-
-  const showEllipse = (isActive || isHovered || wasActive) && !isMobile;
-
   return (
-    <div className="relative flex items-center justify-center">
-      {!isMobile && (
-        <svg
-          className="absolute pointer-events-none"
-          width="200" height="60"
-          viewBox="0 0 200 60"
-          style={{
-            transform: `rotate(${rotation}deg)`,
-            opacity: showEllipse ? 1 : 0,
-            transition: 'opacity 0.5s ease',
-          }}
-        >
-          <ellipse
-            cx="100" cy="30" rx="95" ry="25"
-            fill="none"
-            stroke="var(--stroke-colour)"
-            strokeWidth="var(--stroke-width)"
-          />
-        </svg>
-      )}
-      <Link
-        href={href}
-        onClick={onClick}
-        onMouseEnter={() => !isMobile && setIsHovered(true)}
-        onMouseLeave={() => !isMobile && setIsHovered(false)}
-        className={`relative block text-lg transition-[font-weight,letter-spacing] duration-500 ${
-          isActive ? 'font-bold tracking-tighter' : ''
-        }`}
-      >
-        {children}
-      </Link>
-    </div>
+    <Link
+      href={href}
+      onClick={onClick}
+      className={`block text-lg transition-all duration-300 hover:text-xl ${
+        isActive ? 'font-bold' : ''
+      }`}
+    >
+      {children}
+    </Link>
   );
 }
 
@@ -383,14 +307,3 @@ function MobileNavLink({ href, pathname, onClick, children }) {
   );
 }
 
-function DialogueBox() {
-  return (
-    <div className="w-full flex flex-col items-center gap-4">
-      <ScratchAvatar
-        topImage="/images/photos/ai-avatar.png"
-        bottomImage="/images/photos/real-photo.png"
-        size={280}
-      />
-    </div>
-  );
-}
