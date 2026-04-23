@@ -119,7 +119,7 @@ export default function RootLayout({ children }) {
                     <MobileNavLink href="/about" pathname={pathname}
                       onClick={(e) => handleLinkClick(e, '/about')}>About</MobileNavLink>
                     <MobileNavLink href="/work" pathname={pathname}
-                      onClick={(e) => handleLinkClick(e, '/work')}>Coding Projects</MobileNavLink>
+                      onClick={(e) => handleLinkClick(e, '/work')}>Projects</MobileNavLink>
                     <MobileNavLink href="/misc" pathname={pathname}
                       onClick={(e) => handleLinkClick(e, '/misc')}>Life Outside of Coding</MobileNavLink>
                   </nav>
@@ -259,7 +259,7 @@ function Sidebar({
               if (pathname !== '/') onLinkClick(e, pathname);
             }}
           >
-            Your Name
+            Eno Liu
           </h1>
         </div>
 
@@ -271,7 +271,7 @@ function Sidebar({
           </NavLink>
           <NavLink href="/work" pathname={pathname}
             onClick={(e) => onLinkClick(e, '/work')} theme={theme}>
-            Coding Projects
+            Projects
           </NavLink>
           <NavLink href="/misc" pathname={pathname}
             onClick={(e) => onLinkClick(e, '/misc')} theme={theme}>
@@ -290,17 +290,17 @@ function Sidebar({
 function SocialLinks({ isMobile }) {
   return (
     <div className="flex items-center gap-6 mt-4">
-      <a href="mailto:your@email.com"
+      <a href="mailto:enoch140303@gmail.com"
         className="flex items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
         <MdOutlineMail size={22} />
         {!isMobile && <span className="text-sm">Email</span>}
       </a>
-      <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"
+      <a href="https://www.linkedin.com/in/eno-liu-18779432a/" target="_blank" rel="noopener noreferrer"
         className="flex items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
         <AiOutlineLinkedin size={22} />
         {!isMobile && <span className="text-sm">LinkedIn</span>}
       </a>
-      <a href="https://github.com" target="_blank" rel="noopener noreferrer"
+      <a href="https://github.com/Eno-ow-zz" target="_blank" rel="noopener noreferrer"
         className="flex items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
         <FiGithub size={20} />
         {!isMobile && <span className="text-sm">GitHub</span>}
