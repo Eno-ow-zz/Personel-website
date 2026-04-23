@@ -376,8 +376,8 @@ function DialogueBox() {
   return (
     <div className="w-full flex flex-col items-center gap-4">
       <ScratchAvatar
-        topImage="/images/photos/ai-avatar.svg"
-        bottomImage="/images/photos/real-photo.svg"
+        topImage="/images/photos/ai-avatar.png"
+        bottomImage="/images/photos/real-photo.png"
         size={280}
       />
     </div>

@@ -9,7 +9,6 @@ export default function ScratchAvatar({ topImage, bottomImage, size = 300 }) {
   const topImageRef = useRef(null);
   const [canvasSize, setCanvasSize] = useState(size);
   const [isRevealed, setIsRevealed] = useState(false);
-  const [isResetting, setIsResetting] = useState(false);
 
   const brushRadius = canvasSize * 0.08;
 
@@ -24,7 +23,17 @@ export default function ScratchAvatar({ topImage, bottomImage, size = 300 }) {
       topImageRef.current = img;
       ctx.globalCompositeOperation = 'source-over';
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      const cw = canvas.width;
+      const ch = canvas.height;
+      const iw = img.naturalWidth;
+      const ih = img.naturalHeight;
+      const scale = Math.max(cw / iw, ch / ih);
+      const sw = cw / scale;
+      const sh = ch / scale;
+      const sx = (iw - sw) / 2;
+      const sy = (ih - sh) / 2;
+      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, cw, ch);
     };
     img.src = topImage;
   }, [topImage]);
@@ -132,16 +141,6 @@ export default function ScratchAvatar({ topImage, bottomImage, size = 300 }) {
   const handleLeave = () => {
     isDrawing.current = false;
     lastPoint.current = null;
-    resetCanvas();
-  };
-
-  const resetCanvas = () => {
-    setIsResetting(true);
-    setTimeout(() => {
-      setIsRevealed(false);
-      loadAndDrawTopImage();
-      setTimeout(() => setIsResetting(false), 300);
-    }, 50);
   };
 
   return (
@@ -157,7 +156,7 @@ export default function ScratchAvatar({ topImage, bottomImage, size = 300 }) {
         alt="Real photo"
         className="absolute inset-0 w-full h-full object-cover rounded-2xl"
         style={{
-          opacity: isResetting ? 0 : 1,
+          opacity: 1,
           transition: 'opacity 0.3s ease',
         }}
         draggable={false}
@@ -170,8 +169,8 @@ export default function ScratchAvatar({ topImage, bottomImage, size = 300 }) {
         className="absolute inset-0 w-full h-full rounded-2xl"
         style={{
           cursor: 'crosshair',
-          opacity: isResetting ? 1 : isRevealed ? 0 : 1,
-          transition: isResetting ? 'opacity 0.3s ease' : isRevealed ? 'opacity 0.5s ease' : 'none',
+          opacity: isRevealed ? 0 : 1,
+          transition: isRevealed ? 'opacity 0.5s ease' : 'none',
           touchAction: 'none',
         }}
         onMouseDown={handleStart}
@@ -182,7 +181,7 @@ export default function ScratchAvatar({ topImage, bottomImage, size = 300 }) {
         onTouchEnd={handleEnd}
       />
 
-      {!isRevealed && !isResetting && (
+      {!isRevealed && (
         <div className="absolute bottom-2 left-0 right-0 text-center pointer-events-none">
           <span className="text-xs px-2 py-1 rounded-full bg-black/30 text-white backdrop-blur-sm">
             scratch me ✨
